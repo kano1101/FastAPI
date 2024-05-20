@@ -1,4 +1,4 @@
-FROM python:3.11-buster
+FROM python:3.12
 ENV PYTHONUNBUFFERED=1
 
 WORKDIR /src
@@ -6,8 +6,9 @@ WORKDIR /src
 RUN pip install poetry
 
 COPY pyproject.toml* poetry.lock* ./
+COPY start.sh /start.sh
 
 RUN poetry config virtualenvs.in-project true
-RUN if [ -f pyproject.toml ]; then poetry install --no-root; fi
+RUN chmod 744 /start.sh
 
-ENTRYPOINT ["poetry", "run", "uvicorn", "api.main:app", "--host", "0.0.0.0", "--reload"]
+CMD ["sh", "/start.sh"]
